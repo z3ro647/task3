@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
+import 'package:task3/screen/homescreen.dart';
 import 'package:task3/sql_helper.dart';
 
 class EditScreen extends StatefulWidget {
@@ -20,15 +21,27 @@ class _EditScreenState extends State<EditScreen> {
   TextEditingController text1Controller = TextEditingController();
   TextEditingController text2Controller = TextEditingController();
   TextEditingController text3Controller = TextEditingController();
-  
-  late String name, text1, text2, text3;
+
+  String email = "";
+  String name = "";
+  String text1 = "";
+  String text2 = "";
+  String text3 = "";
 
   List<Map<String, dynamic>> _item = [];
 
-  Future<void> updateitem(int id, String email, String name, String text1, String text2, String text3) async {
-    //print('Email: '+email+' , Name: '+name+', Text1'+txt1+' ,Text2'+txt2+' ,Text3'+txt3);
-    await SQLHelper.updateSingleItemOfUserForEditing(id, email, name, text1, text2, text3);
+  Future<void> updateitem(int id, String email, String name, String text1,
+      String text2, String text3) async {
+    await SQLHelper.updateSingleItemOfUserForEditing(
+        id, name, text1, text2, text3);
     print('Item Updated');
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(
+                  name: name,
+                  email: email,
+                )));
   }
 
   void readData() async {
@@ -36,6 +49,7 @@ class _EditScreenState extends State<EditScreen> {
     _item = data;
     print(_item);
     setState(() {
+      email = _item[0]['email'];
       name = _item[0]['name'];
       text1 = _item[0]['text1'];
       text2 = _item[0]['text2'];
@@ -115,15 +129,16 @@ class _EditScreenState extends State<EditScreen> {
               height: 48,
               child: RaisedButton(
                 onPressed: () {
-                  if(_formKey.currentState!.validate()) {
-                      setState(() {
-                        name = nameController.text;
-                        text1 = text1Controller.text;
-                        text2 = text2Controller.text;
-                        text3 = text3Controller.text;
-                      });
-                      updateitem(widget.id, widget.email, name, text1, text2, text3);
-                    }
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      name = nameController.text;
+                      text1 = text1Controller.text;
+                      text2 = text2Controller.text;
+                      text3 = text3Controller.text;
+                    });
+                    updateitem(
+                        widget.id, email, name, text1, text2, text3);
+                  }
                 },
                 child: const Text(
                   'Update',

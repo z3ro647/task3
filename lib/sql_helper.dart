@@ -145,7 +145,7 @@ class SQLHelper {
   //   return db.update('items', )
   // }
   static Future<int> updateSingleItemOfUserForEditing(
-    int id, String email, String name, String text1, String text2, String text3) async {
+    int id, String name, String text1, String text2, String text3) async {
       final db = await SQLHelper.db();
 
       final data = {
@@ -155,7 +155,9 @@ class SQLHelper {
         'text3': text3,
       };
 
-      final result = await db.update('items', data, where: "id = ? and email = ?", whereArgs: [id, email]);
+      print(data);
+
+      final result = await db.update('items', data, where: "id = ?", whereArgs: [id]);
       return result;
     }
 }

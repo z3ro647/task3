@@ -13,7 +13,10 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
 
-  late String name, text1, text2, text3;
+  String name = "";
+  String text1 = "";
+  String text2 = "";
+  String text3 = "";
 
   List<Map<String, dynamic>> _item = [];
 
