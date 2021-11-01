@@ -34,8 +34,10 @@ class _EditScreenState extends State<EditScreen> {
       String text2, String text3) async {
     await SQLHelper.updateSingleItemOfUserForEditing(
         id, name, text1, text2, text3);
-    print('Item Updated');
-    Navigator.push(
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Item Updated Successfully!'),
+    ));
+    Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => HomeScreen(

@@ -155,9 +155,45 @@ class SQLHelper {
         'text3': text3,
       };
 
-      print(data);
-
       final result = await db.update('items', data, where: "id = ?", whereArgs: [id]);
       return result;
     }
+
+  // Read Old Passwrod
+  static Future<List<Map<String, dynamic>>> readOldPassword(int id) async {
+    final db = await SQLHelper.db();
+    return db.query('users', where: "id = ?", whereArgs: [id]);
+  }
+
+  // Update New Password
+  static Future<int> updatePassword(
+  int id, String password) async {
+    final db = await SQLHelper.db();
+
+    final data = {
+      'password': password,
+    };
+
+    final result = await db.update('users', data, where: "id = ?", whereArgs: [id]);
+    return result;
+  }
+
+  // Read Username and Email
+  static Future<List<Map<String, dynamic>>> readUsernameAndEmail(String username, String email) async {
+    final db = await SQLHelper.db();
+    return db.query('users', where: "username = ? and email = ?", whereArgs: [username, email]);
+  }
+
+  // Update New Password
+  static Future<int> forgotPassword(
+  String username, String email, String password) async {
+    final db = await SQLHelper.db();
+
+    final data = {
+      'password': password,
+    };
+
+    final result = await db.update('users', data, where: "username = ? and email = ?", whereArgs: [username, email]);
+    return result;
+  }
 }

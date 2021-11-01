@@ -46,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Task 3'),
       ),
       body: ListView(
+        shrinkWrap: true,
         children: <Widget>[
           const SizedBox(
             height: 20,
@@ -58,53 +59,61 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 20,
           ),
           //itemlist(context),
-          ListView.builder(
-              shrinkWrap: true,
-              //scrollDirection: Axis.vertical,
-              itemCount: _items.length,
-              itemBuilder: (BuildContext context, int index) => Card(
-                    color: Colors.orange[200],
-                    margin: const EdgeInsets.all(15),
-                    child: ListTile(
-                      title: Text(_items[index]['name']),
-                      trailing: SizedBox(
-                        width: 150,
-                        child: Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove_red_eye),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => DetailScreen(
-                                              id: _items[index]['id'],
-                                            )));
-                                // DetailScreen(id: _items[index]['id']);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => EditScreen(
-                                              email: widget.name,
-                                              id: _items[index]['id'],
-                                            )));
-                              },
-                            ),
-                            IconButton(
-                                icon: const Icon(Icons.delete),
+          Container(
+            height: 400,
+            child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: _items.length,
+                itemBuilder: (BuildContext context, int index) => Card(
+                      color: Colors.orange[200],
+                      margin: const EdgeInsets.all(15),
+                      child: ListTile(
+                        title: Text(_items[index]['name']),
+                        trailing: SizedBox(
+                          width: 150,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.remove_red_eye),
                                 onPressed: () {
-                                  deleteItem(_items[index]['id']);
-                                })
-                          ],
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DetailScreen(
+                                                id: _items[index]['id'],
+                                              )));
+                                  // DetailScreen(id: _items[index]['id']);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => EditScreen(
+                                                email: widget.name,
+                                                id: _items[index]['id'],
+                                              )));
+                                },
+                              ),
+                              IconButton(
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () {
+                                    deleteItem(_items[index]['id']);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text('Item Deleted Successfully!'),
+                                    ));
+                                    _refreshlist();
+                                  })
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  )),
+                    )),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: RaisedButton(
@@ -114,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   MaterialPageRoute(
                       builder: (context) => AddScreen(
                             email: widget.email,
+                            username: widget.name,
                           ))),
               child: const Text(
                 'Add Item',
@@ -131,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const SettingScreen())),
+                      builder: (context) => const SettingScreen(id: 1,))),
               child: const Text(
                 'Settings',
                 style: TextStyle(
@@ -142,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           )
         ],
-      ),
+      )
     );
   }
 }

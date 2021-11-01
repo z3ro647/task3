@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
 import 'package:task3/screen/registerscreen.dart';
+import 'package:task3/sql_helper.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -13,6 +14,28 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController emailController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+
+  String email = "";
+  String username = "";
+  String newPassword = "";
+
+  Future<void> passwordReset(
+      String username, String email, String newpassword) async {
+    final data = await SQLHelper.readUsernameAndEmail(username, email);
+    int l = data.length;
+    if (l == 1) {
+      await SQLHelper.forgotPassword(username, email, newpassword);
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Password changed successfully!'),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Username and Email does not match!'),
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,19 +63,57 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Form(
               key: _formKey,
-              child: TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter some text';
-                  }
-                  return null;
-                },
-                controller: emailController,
-                decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'Email',
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey))),
+              child: Column(
+                children: [
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    controller: usernameController,
+                    decoration: const InputDecoration(
+                        labelText: 'Username',
+                        hintText: 'Username',
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey))),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    controller: emailController,
+                    decoration: const InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Email',
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey))),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    controller: newPasswordController,
+                    decoration: const InputDecoration(
+                        labelText: 'New Password',
+                        hintText: 'New Password',
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey))),
+                  ),
+                ],
               ),
             ),
           ),
@@ -63,7 +124,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: RaisedButton(
                 color: CustomColor.blue,
-                onPressed: () {},
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      username = usernameController.text;
+                      email = emailController.text;
+                      newPassword = newPasswordController.text;
+                    });
+                    passwordReset(username, email, newPassword);
+                  }
+                },
                 child: const Text(
                   'Submit',
                   style: TextStyle(

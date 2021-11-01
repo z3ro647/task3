@@ -38,14 +38,12 @@ class _LoginScreenState extends State<LoginScreen> {
       print(data[0]['email']);
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (context) => HomeScreen(name: usernameOremail, email: data[0]['email'],)));
-      //HomeScreen(name: usernameOremail, email: data[0]['email']);
     } else if (k == 1) {
       print('User exist');
       final data = await SQLHelper.getUserByEmail(usernameOremail);
       print(data[0]['username']);
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => HomeScreen(name: data[0]['username'], email: usernameOremail)));
-      //HomeScreen(name: data[0]['username'], email: usernameOremail);
     } else {
       print('User does not exist');
     }

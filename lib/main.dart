@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
 import 'package:task3/screen/splashscreen.dart';
-import 'package:task3/screens.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,6 +45,5 @@ class _MyHomePageState extends State<MyHomePage> {
     return Container(
         color: CustomColor.blue,
         child: FlutterLogo(size: MediaQuery.of(context).size.height));
-    //return const ScreensList();
   }
 }

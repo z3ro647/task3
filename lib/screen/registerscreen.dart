@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
+import 'package:task3/screen/homescreen.dart';
+import 'package:task3/screen/loginscreen.dart';
 import 'package:task3/sql_helper.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -24,7 +26,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> adduser(String username, String email, String password) async {
     await SQLHelper.createUser(username, email, password);
-    print('User Created');
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('User Created Successfully!'),
+    ));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => const LoginScreen()));
   }
 
   @override

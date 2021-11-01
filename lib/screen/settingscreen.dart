@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
+import 'package:task3/screen/loginscreen.dart';
+import 'package:task3/sql_helper.dart';
 
 class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+  const SettingScreen({Key? key, required this.id}) : super(key: key);
+
+  final int id;
 
   @override
   _SettingScreenState createState() => _SettingScreenState();
@@ -11,8 +15,32 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController usernameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController oldPasswordCOntroller = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  String oldPassword = "";
+  String newPassword = "";
+  String confirmPassword = "";
+
+  Future<void> changePassword(int id, String oldPasswrod, String newPassword,
+      String confirmPassword) async {
+    if (newPassword.contains(confirmPassword)) {
+      final data = await SQLHelper.readOldPassword(id);
+      var op = data[0]['password'];
+      if(oldPassword.contains(op)) {
+        await SQLHelper.updatePassword(id, confirmPassword);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Old Password Does not Match'),
+      ));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Old Password and Confirm Password Does not Match'),
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +57,7 @@ class _SettingScreenState extends State<SettingScreen> {
           const Text(
             'Setting',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24
-            ),
+            style: TextStyle(fontSize: 24),
           ),
           const SizedBox(
             height: 25,
@@ -49,7 +75,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       }
                       return null;
                     },
-                    controller: usernameController,
+                    controller: oldPasswordCOntroller,
                     decoration: const InputDecoration(
                       labelText: 'Old Password',
                       hintText: 'Old Password',
@@ -67,7 +93,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       }
                       return null;
                     },
-                    controller: usernameController,
+                    controller: newPasswordController,
                     decoration: const InputDecoration(
                       labelText: 'New Password',
                       hintText: 'New Password',
@@ -85,7 +111,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       }
                       return null;
                     },
-                    controller: usernameController,
+                    controller: confirmPasswordController,
                     decoration: const InputDecoration(
                       labelText: 'Confirm Password',
                       hintText: 'Confirm Password',
@@ -104,13 +130,19 @@ class _SettingScreenState extends State<SettingScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: RaisedButton(
               color: CustomColor.blue,
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  oldPassword = oldPasswordCOntroller.text;
+                  newPassword = newPasswordController.text;
+                  confirmPassword = confirmPasswordController.text;
+                });
+                changePassword(
+                    widget.id, oldPassword, newPassword, confirmPassword);
+              },
               child: const Text(
                 'Submit',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
-                ),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           ),
@@ -121,13 +153,16 @@ class _SettingScreenState extends State<SettingScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: RaisedButton(
               color: CustomColor.blue,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
+              },
               child: const Text(
                 'Logout',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
-                ),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           ),
@@ -141,15 +176,22 @@ class _SettingScreenState extends State<SettingScreen> {
               onPressed: () {},
               child: const Text(
                 'Biometrics',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
-                ),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           )
         ],
       ),
     );
+  }
+}
+
+class CustomInputField extends StatelessWidget {
+  const CustomInputField({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
