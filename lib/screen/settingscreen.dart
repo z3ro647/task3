@@ -30,10 +30,13 @@ class _SettingScreenState extends State<SettingScreen> {
       var op = data[0]['password'];
       if(oldPassword.contains(op)) {
         await SQLHelper.updatePassword(id, confirmPassword);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Password Updated Successfully'),
+        ));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Old Password Does not Match'),
-      ));
+          content: Text('Old Password Does not Match'),
+        ));
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

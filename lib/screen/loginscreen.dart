@@ -36,16 +36,26 @@ class _LoginScreenState extends State<LoginScreen> {
       print('User exist');
       final data = await SQLHelper.getUserByUsername(usernameOremail);
       print(data[0]['email']);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => HomeScreen(name: usernameOremail, email: data[0]['email'],)));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                    name: usernameOremail,
+                    email: data[0]['email'],
+                  )));
     } else if (k == 1) {
       print('User exist');
       final data = await SQLHelper.getUserByEmail(usernameOremail);
       print(data[0]['username']);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => HomeScreen(name: data[0]['username'], email: usernameOremail)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                  name: data[0]['username'], email: usernameOremail)));
     } else {
-      print('User does not exist');
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('User Not Found'),
+      ));
     }
   }
 

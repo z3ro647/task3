@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
-import 'package:task3/screen/homescreen.dart';
 import 'package:task3/screen/loginscreen.dart';
 import 'package:task3/sql_helper.dart';
 
@@ -24,15 +23,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  Future<void> checkuser(String username, String email, String password) async {
+    final dataUser = await SQLHelper.getUserByUsername(username);
+    final dataEmail = await SQLHelper.getUserByEmail(email);
+    int i, j;
+    i = dataUser.length;
+    j = dataEmail.length;
+    if (i >= 1) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Username already exist'),
+      ));
+    } else if (j >= 1) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Email already exist'),
+      ));
+    } else {
+      adduser(username, email, password);
+    }
+  }
+
   Future<void> adduser(String username, String email, String password) async {
     await SQLHelper.createUser(username, email, password);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('User Created Successfully!'),
     ));
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => const LoginScreen()));
+        context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
 
   @override
@@ -104,14 +120,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: RaisedButton(
               color: CustomColor.blue,
               onPressed: () {
-                if(_formKey.currentState!.validate()) {
+                if (_formKey.currentState!.validate()) {
                   setState(() {
                     username = usernameController.text;
                     email = emailController.text;
                     password = passwordController.text;
                     confirmpassword = confirmPasswordController.text;
                   });
-                  adduser(username, email, password);
+                  if (password ==confirmpassword) {
+                    checkuser(username, email, password);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content:
+                          Text("Password and Confirm Password dosen't matched"),
+                    ));
+                  }
                 }
               },
               child: const Text(
@@ -133,10 +156,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               onPressed: () => Navigator.pop(context),
               child: const Text(
                 'Login',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white
-                ),
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ),
           ),

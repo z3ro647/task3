@@ -70,6 +70,7 @@ class SQLHelper {
     final db = await SQLHelper.db();
     return db.query('users', where: 'username = ?', whereArgs: [username]);
   }
+  
   //Read a single user by email
   static Future<List<Map<String, dynamic>>> getUserByEmail(String email) async {
     final db = await SQLHelper.db();
@@ -139,11 +140,6 @@ class SQLHelper {
   }
 
   // Read single item of the user for editing
-  // static Future<List<Map<String, dynamic>>> updateSingleItemOfUserForEditing(int id, String email, String name) async {
-  //   final db = await SQLHelper.db();
-  //   final 
-  //   return db.update('items', )
-  // }
   static Future<int> updateSingleItemOfUserForEditing(
     int id, String name, String text1, String text2, String text3) async {
       final db = await SQLHelper.db();
