@@ -83,28 +83,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   CustomInputWidget(
                       controller: usernameController,
                       labeltext: 'Username',
-                      hinttext: 'Username'),
+                      hinttext: 'Username',
+                      icon: Icons.person_outline,  
+                    ),
                   const SizedBox(
                     height: 20,
                   ),
                   CustomInputWidget(
                       controller: emailController,
                       labeltext: 'Email',
-                      hinttext: 'Email'),
+                      hinttext: 'Email',
+                      icon: Icons.mail_outline  
+                    ),
                   const SizedBox(
                     height: 20,
                   ),
                   CustomInputWidget(
                       controller: passwordController,
                       labeltext: 'Password',
-                      hinttext: 'Password'),
+                      hinttext: 'Password',
+                      icon: Icons.lock_outline,
+                    ),
                   const SizedBox(
                     height: 20,
                   ),
                   CustomInputWidget(
                       controller: confirmPasswordController,
                       labeltext: 'Confirm Password',
-                      hinttext: 'Confirm Password'),
+                      hinttext: 'Confirm Password',
+                      icon: Icons.lock_outline,  
+                    ),
                 ],
               ),
             ),
@@ -112,54 +120,58 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SizedBox(
             height: 25,
           ),
-          const SizedBox(
-            height: 25,
-          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    username = usernameController.text;
-                    email = emailController.text;
-                    password = passwordController.text;
-                    confirmpassword = confirmPasswordController.text;
-                  });
-                  if (password ==confirmpassword) {
-                    checkuser(username, email, password);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content:
-                          Text("Password and Confirm Password dosen't matched"),
-                    ));
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: CustomColor.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                  )
+                ),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      username = usernameController.text;
+                      email = emailController.text;
+                      password = passwordController.text;
+                      confirmpassword = confirmPasswordController.text;
+                    });
+                    if (password ==confirmpassword) {
+                      checkuser(username, email, password);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content:
+                            Text("Password and Confirm Password dosen't matched"),
+                      ));
+                    }
                   }
-                }
-              },
-              child: const Text(
-                'Submit',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                },
+                child: const Text(
+                  'Register',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () => Navigator.pop(context),
-              child: const Text(
-                'Login',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Already have an account?"),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(color: CustomColor.blue),
+                  )),
+            ],
           ),
         ],
       ),
@@ -172,12 +184,13 @@ class CustomInputWidget extends StatelessWidget {
       {Key? key,
       required this.controller,
       required this.labeltext,
-      required this.hinttext})
+      required this.hinttext, required this.icon})
       : super(key: key);
 
   final TextEditingController controller;
   final String labeltext;
   final String hinttext;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -185,6 +198,22 @@ class CustomInputWidget extends StatelessWidget {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter some text';
+        } else if (labeltext == 'Username') {
+          if(value.length < 5) {
+            return 'Username must be atleast 5 character';
+          }
+        } else if (labeltext == 'Email') {
+          if(!value.contains('@')) {
+            return 'Invalid Email address';
+          }
+        } else if (labeltext == 'Password') {
+          if(value.length < 6) {
+            return 'Password must be atleast 6 character';
+          }
+        } else if (labeltext == 'Confirm Password') {
+          if(value.length < 6) {
+            return 'Confirm Password must be atleast 6 character';
+          }
         }
         return null;
       },
@@ -192,8 +221,12 @@ class CustomInputWidget extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labeltext,
         hintText: hinttext,
-        border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)),
+        prefixIcon: Icon(
+          icon
+        ),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.grey)),
       ),
     );
   }

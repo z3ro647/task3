@@ -62,23 +62,24 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          backgroundColor: CustomColor.blue,
-          toolbarHeight: 250,
-          title: const Center(
-            child: Text(
-              'Task 3',
-              style: TextStyle(fontSize: 25),
-            ),
-          )),
+      // appBar: AppBar(
+      //     backgroundColor: CustomColor.blue,
+      //     toolbarHeight: 250,
+      //     title: const Center(
+      //       child: Text(
+      //         'Task 3',
+      //         style: TextStyle(fontSize: 25),
+      //       ),
+      //     )),
       body: ListView(
         children: <Widget>[
-          const SizedBox(
-            height: 40,
+          SizedBox(
+            height: 220.0,
+            child: Image.asset('assets/images/reward.jpg'),
           ),
           const Text(
             'Login',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 20, color: CustomColor.blue),
             textAlign: TextAlign.center,
           ),
           const SizedBox(
@@ -95,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: usernameOremailController,
                       labeltext: 'Username/Email',
                       hinttext: 'Username/Email',
+                      icon: Icons.person,
                       obsecure: false,
                     ),
                     const SizedBox(
@@ -104,73 +106,71 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: passwordController,
                       labeltext: 'Password',
                       hinttext: 'Password',
+                      icon: Icons.lock,
                       obsecure: true,
                     ),
                   ],
                 )),
           ),
           const SizedBox(
-            height: 20,
+            height: 5,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                SizedBox(
-                  width: 140,
-                  child: RaisedButton(
-                    color: CustomColor.blue,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          usernameOremail = usernameOremailController.text;
-                          pass = passwordController.text;
-                        });
-                        searchUser(usernameOremail, pass);
-                      }
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 140,
-                  child: RaisedButton(
-                      color: CustomColor.blue,
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ForgotPassword())),
-                      child: const Text(
-                        'Forgot Password',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      )),
-                )
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const RegisterScreen())),
+          TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ForgotPassword()));
+              },
               child: const Text(
-                'Register',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                'Forgot Password ?',
+                style: TextStyle(color: CustomColor.blue),
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: CustomColor.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                  )
+                ),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      usernameOremail = usernameOremailController.text;
+                      pass = passwordController.text;
+                    });
+                    searchUser(usernameOremail, pass);
+                  }
+                },
+                child: const Text(
+                  'Login',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Don't have an account yet?"),
+              Builder(
+                  builder: (context) => TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterScreen()));
+                      },
+                      child: const Text(
+                        'Register',
+                        style: TextStyle(color: CustomColor.blue),
+                      ))),
+            ],
           ),
         ],
       ),
@@ -184,11 +184,13 @@ class LoginFormWidget extends StatelessWidget {
       required this.controller,
       required this.labeltext,
       required this.hinttext,
-      required this.obsecure})
+      required this.obsecure,
+      required this.icon})
       : super(key: key);
   final TextEditingController controller;
   final String labeltext;
   final String hinttext;
+  final IconData icon;
   final bool obsecure;
 
   @override
@@ -205,8 +207,12 @@ class LoginFormWidget extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labeltext,
         hintText: hinttext,
-        border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)),
+        prefixIcon: Icon(
+          icon,
+        ),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.grey)),
       ),
     );
   }

@@ -65,118 +65,141 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               key: _formKey,
               child: Column(
                 children: [
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    controller: usernameController,
-                    decoration: const InputDecoration(
-                        labelText: 'Username',
-                        hintText: 'Username',
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey))),
-                  ),
+                  CustomInputWidget(
+                      controller: usernameController,
+                      labeltext: 'Username',
+                      hinttext: 'Username',
+                      icon: Icons.person_outline),
                   const SizedBox(
                     height: 20,
                   ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    controller: emailController,
-                    decoration: const InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Email',
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey))),
-                  ),
+                  CustomInputWidget(
+                      controller: emailController,
+                      labeltext: 'Email',
+                      hinttext: 'Email',
+                      icon: Icons.email_outlined),
                   const SizedBox(
                     height: 20,
                   ),
-                  TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    controller: newPasswordController,
-                    decoration: const InputDecoration(
-                        labelText: 'New Password',
-                        hintText: 'New Password',
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey))),
-                  ),
+                  CustomInputWidget(
+                      controller: newPasswordController,
+                      labeltext: 'New Password',
+                      hinttext: 'New Password',
+                      icon: Icons.lock_outline)
                 ],
               ),
             ),
           ),
-          const SizedBox(
-            height: 25,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Already have an account?"),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(color: CustomColor.blue),
+                  )),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-                color: CustomColor.blue,
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      username = usernameController.text;
-                      email = emailController.text;
-                      newPassword = newPasswordController.text;
-                    });
-                    passwordReset(username, email, newPassword);
-                  }
-                },
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                )),
-          ),
-          const SizedBox(
-            height: 25,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 150,
-                  child: RaisedButton(
-                    color: CustomColor.blue,
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: CustomColor.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                  )
                 ),
-                SizedBox(
-                    width: 150,
-                    child: RaisedButton(
-                        color: CustomColor.blue,
-                        onPressed: () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const RegisterScreen())),
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
-                        )))
-              ],
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        username = usernameController.text;
+                        email = emailController.text;
+                        newPassword = newPasswordController.text;
+                      });
+                      passwordReset(username, email, newPassword);
+                    }
+                  },
+                  child: const Text(
+                    'Reset',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  )),
             ),
-          )
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Don't have an account yet?"),
+              TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterScreen()));
+                  },
+                  child: const Text(
+                    'Register',
+                    style: TextStyle(color: CustomColor.blue),
+                  )),
+            ],
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class CustomInputWidget extends StatelessWidget {
+  const CustomInputWidget(
+      {Key? key,
+      required this.controller,
+      required this.labeltext,
+      required this.hinttext,
+      required this.icon})
+      : super(key: key);
+
+  final TextEditingController controller;
+  final String labeltext;
+  final String hinttext;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter some text';
+        } else if (labeltext == 'Username') {
+          if(value.length < 5 ) {
+            return 'Username must be atleast 5 character';
+          }
+        } else if (labeltext == 'Email') {
+          if(!value.contains('@')) {
+            return 'Invalid Email address';
+          }
+        } else if (labeltext == 'New Password') {
+          if(value.length < 6) {
+            return 'New Password must be atleast 6 character';
+          }
+        }
+        return null;
+      },
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labeltext,
+        hintText: hinttext,
+        prefixIcon: Icon(
+          icon,
+        ),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.grey)),
       ),
     );
   }
