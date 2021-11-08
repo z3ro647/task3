@@ -111,6 +111,10 @@ class _ScreensListState extends State<ScreensList> {
               onPressed: () {},
               child: const Text('Check items')
             ),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('DataTableTutorial'),
+            )
           ],
         ),
       ),
