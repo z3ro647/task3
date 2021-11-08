@@ -41,118 +41,129 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: CustomColor.blue,
-        title: const Text('Task 3'),
-      ),
-      body: ListView(
-        shrinkWrap: true,
-        children: <Widget>[
-          const SizedBox(
-            height: 20,
-          ),
-          Text(
-            'Welcome, Name: ' + widget.name + ', Email: ' + widget.email,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          //itemlist(context),
-          SizedBox(
-            height: 400,
-            child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                itemCount: _items.length,
-                itemBuilder: (BuildContext context, int index) => Card(
-                      color: Colors.orange[200],
-                      margin: const EdgeInsets.all(15),
-                      child: ListTile(
-                        title: Text(_items[index]['name']),
-                        trailing: SizedBox(
-                          width: 150,
-                          child: Row(
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.remove_red_eye),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => DetailScreen(
-                                                id: _items[index]['id'],
-                                              )));
-                                  // DetailScreen(id: _items[index]['id']);
-                                },
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => EditScreen(
-                                                email: widget.name,
-                                                id: _items[index]['id'],
-                                              )));
-                                },
-                              ),
-                              IconButton(
-                                  icon: const Icon(Icons.delete),
-                                  onPressed: () {
-                                    deleteItem(_items[index]['id']);
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text('Item Deleted Successfully!'),
-                                    ));
-                                    _refreshlist();
-                                  })
-                            ],
-                          ),
-                        ),
+        appBar: AppBar(
+          backgroundColor: CustomColor.blue,
+          title: const Text('Task 3'),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'Welcome, Name: ' + widget.name + ', Email: ' + widget.email,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Table(
+                  columnWidths: const {
+                    1: FlexColumnWidth(),
+                    2: FlexColumnWidth()
+                  },
+                  children: [
+                    const TableRow(children: [
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('name'),
                       ),
-                    )),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddScreen(
-                            email: widget.email,
-                            username: widget.name,
-                          ))),
-              child: const Text(
-                'Add Item',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text('Action'),
+                      )
+                    ]),
+                    for (var item in _items)
+                      TableRow(children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(item['name']),
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove_red_eye),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailScreen(
+                                              id: item['id'],
+                                            )));
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailScreen(
+                                              id: item['id'],
+                                            )));
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailScreen(
+                                              id: item['id'],
+                                            )));
+                              },
+                            ),
+                          ],
+                        ),
+                      ])
+                  ],
+                  border: TableBorder.all(width: 1, color: CustomColor.blue),
                 ),
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingScreen(id: 1,))),
-              child: const Text(
-                'Settings',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: RaisedButton(
+                  color: CustomColor.blue,
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddScreen(
+                                email: widget.email,
+                                username: widget.name,
+                              ))),
+                  child: const Text(
+                    'Add Item',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
-      )
-    );
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: RaisedButton(
+                  color: CustomColor.blue,
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SettingScreen(
+                                id: 1,
+                              ))),
+                  child: const Text(
+                    'Settings',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ));
   }
 }
