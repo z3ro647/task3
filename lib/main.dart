@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
 import 'package:task3/datatabletutorial.dart';
+import 'package:task3/screen/detailscreen.dart';
 import 'package:task3/screen/homescreen.dart';
 import 'package:task3/screen/splashscreen.dart';
 import 'package:task3/screens.dart';
@@ -45,9 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //return const SplashScreen();
     //return const HomeScreen(name: 'vivek', email: 'z3ro647@gmail.com');
     return Container(
         color: CustomColor.blue,
         child: FlutterLogo(size: MediaQuery.of(context).size.height));
+    //return const ScreensList();
+    //return const DetailScreen(id: 2, email: 'z3ro647@gmail.com', name: 'vivek');
   }
 }

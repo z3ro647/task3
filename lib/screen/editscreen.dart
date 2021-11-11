@@ -4,10 +4,11 @@ import 'package:task3/screen/homescreen.dart';
 import 'package:task3/sql_helper.dart';
 
 class EditScreen extends StatefulWidget {
-  const EditScreen({Key? key, required this.email, required this.id})
+  const EditScreen({Key? key, required this.email, required this.id, required this.name})
       : super(key: key);
-
+  
   final String email;
+  final String name;
   final int id;
 
   @override
@@ -22,18 +23,17 @@ class _EditScreenState extends State<EditScreen> {
   TextEditingController text2Controller = TextEditingController();
   TextEditingController text3Controller = TextEditingController();
 
-  String email = "";
-  String name = "";
+  String itemName = "";
   String text1 = "";
   String text2 = "";
   String text3 = "";
 
   List<Map<String, dynamic>> _item = [];
 
-  Future<void> updateitem(int id, String email, String name, String text1,
+  Future<void> updateitem(int id, String email, String name, String itemName, String text1,
       String text2, String text3) async {
     await SQLHelper.updateSingleItemOfUserForEditing(
-        id, name, text1, text2, text3);
+        id, itemName, text1, text2, text3);
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('Item Updated Successfully!'),
     ));
@@ -51,8 +51,7 @@ class _EditScreenState extends State<EditScreen> {
     _item = data;
     print(_item);
     setState(() {
-      email = _item[0]['email'];
-      name = _item[0]['name'];
+      itemName = _item[0]['name'];
       text1 = _item[0]['text1'];
       text2 = _item[0]['text2'];
       text3 = _item[0]['text3'];
@@ -96,7 +95,7 @@ class _EditScreenState extends State<EditScreen> {
                   CustomInputField(
                       controller: nameController,
                       labeltext: 'Name',
-                      hinttext: name),
+                      hinttext: itemName),
                   const SizedBox(
                     height: 20,
                   ),
@@ -133,13 +132,13 @@ class _EditScreenState extends State<EditScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     setState(() {
-                      name = nameController.text;
+                      itemName = nameController.text;
                       text1 = text1Controller.text;
                       text2 = text2Controller.text;
                       text3 = text3Controller.text;
                     });
                     updateitem(
-                        widget.id, email, name, text1, text2, text3);
+                        widget.id, widget.email, widget.name, itemName, text1, text2, text3);
                   }
                 },
                 child: const Text(

@@ -80,7 +80,7 @@ class _DataTableTutorialState extends State<DataTableTutorial> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => DetailScreen(
-                                              id: item['id'],
+                                              id: item['id'], email: 'z3ro647@gmail.com', name: 'vivek',
                                             )));
                               },
                             ),
@@ -91,7 +91,7 @@ class _DataTableTutorialState extends State<DataTableTutorial> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => EditScreen(
-                                              id: item['id'], email: 'z3ro647@gmail.com',
+                                              id: item['id'], email: 'z3ro647@gmail.com', name: 'vivek',
                                             )));
                               },
                             ),

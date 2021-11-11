@@ -72,13 +72,13 @@ class _ScreensListState extends State<ScreensList> {
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const EditScreen(email: 'z3ro647@gmail.com', id: 1))),
+                        builder: (context) => const EditScreen(email: 'z3ro647@gmail.com', id: 1, name: 'vivek',))),
                 child: const Text('Edit Screen')),
             ElevatedButton(
                 onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const DetailScreen(id: 2,))),
+                        builder: (context) => const DetailScreen(id: 2, email: 'z3ro647@gmail.com', name: 'vivek',))),
                 child: const Text('Detail Screen')),
             ElevatedButton(
                 onPressed: () => Navigator.push(

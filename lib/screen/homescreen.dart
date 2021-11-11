@@ -38,64 +38,64 @@ class _HomeScreenState extends State<HomeScreen> {
     _refreshlist();
   }
 
-  void _show(BuildContext ctx, int id, String name, String email) async {
-    final singleData = await SQLHelper.getOneItemOfUser(id);
-    String itemName = "";
-    String text1 = "";
-    String text2 = "";
-    String text3 = "";
-    setState(() {
-      itemName = singleData[0]['name'];
-      text1 = singleData[0]['text1'];
-      text2 = singleData[0]['text2'];
-      text3 = singleData[0]['text3'];
-    });
-    showDialog(
-      context: ctx,
-      builder: (_) {
-        return SimpleDialog(
-          title: Text('Name: ' + itemName),
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-              child: Text('Text 1:' + text1),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-              child: Text('Text 2:' + text2),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
-              child: Text('Text 3:' + text3),
-            ),
-            SimpleDialogOption(
-              child: const Text('Edit'),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => EditScreen(
-                              email: email,
-                              id: id,
-                            )));
-              },
-            ),
-            SimpleDialogOption(
-              child: const Text('Delete'),
-              onPressed: () {
-                deleteItem(id);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Item Deleted Successfully!'),
-                ));
-                Navigator.pop(context);
-                _refreshlist();
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
+  // void _show(BuildContext ctx, int id, String name, String email) async {
+  //   final singleData = await SQLHelper.getOneItemOfUser(id);
+  //   String itemName = "";
+  //   String text1 = "";
+  //   String text2 = "";
+  //   String text3 = "";
+  //   setState(() {
+  //     itemName = singleData[0]['name'];
+  //     text1 = singleData[0]['text1'];
+  //     text2 = singleData[0]['text2'];
+  //     text3 = singleData[0]['text3'];
+  //   });
+  //   showDialog(
+  //     context: ctx,
+  //     builder: (_) {
+  //       return SimpleDialog(
+  //         title: Text('Name: ' + itemName),
+  //         children: [
+  //           Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+  //             child: Text('Text 1:' + text1),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+  //             child: Text('Text 2:' + text2),
+  //           ),
+  //           Padding(
+  //             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+  //             child: Text('Text 3:' + text3),
+  //           ),
+  //           SimpleDialogOption(
+  //             child: const Text('Edit'),
+  //             onPressed: () {
+  //               Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                       builder: (context) => EditScreen(
+  //                             email: email,
+  //                             id: id,
+  //                           )));
+  //             },
+  //           ),
+  //           SimpleDialogOption(
+  //             child: const Text('Delete'),
+  //             onPressed: () {
+  //               deleteItem(id);
+  //               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //                 content: Text('Item Deleted Successfully!'),
+  //               ));
+  //               Navigator.pop(context);
+  //               _refreshlist();
+  //             },
+  //           )
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -162,8 +162,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           TextButton(
                             onPressed: () {
                               debugPrint(item['id'].toString());
-                              _show(context, item['id'], widget.name,
-                                  widget.email);
+                              // _show(context, item['id'], widget.name,
+                              //     widget.email);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailScreen(
+                                          email: widget.email,
+                                          id: item['id'],
+                                          name: widget.name)));
                             },
                             child: Text(
                               item['id'].toString(),
@@ -175,8 +182,15 @@ class _HomeScreenState extends State<HomeScreen> {
                           TextButton(
                             onPressed: () {
                               debugPrint(item['id'].toString());
-                              _show(context, item['id'], widget.name,
-                                  widget.email);
+                              // _show(context, item['id'], widget.name,
+                              //     widget.email);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => DetailScreen(
+                                          email: widget.email,
+                                          id: item['id'],
+                                          name: widget.name)));
                             },
                             child: Text(
                               item['name'],
