@@ -38,6 +38,65 @@ class _HomeScreenState extends State<HomeScreen> {
     _refreshlist();
   }
 
+  void _show(BuildContext ctx, int id, String name, String email) async {
+    final singleData = await SQLHelper.getOneItemOfUser(id);
+    String itemName = "";
+    String text1 = "";
+    String text2 = "";
+    String text3 = "";
+    setState(() {
+      itemName = singleData[0]['name'];
+      text1 = singleData[0]['text1'];
+      text2 = singleData[0]['text2'];
+      text3 = singleData[0]['text3'];
+    });
+    showDialog(
+      context: ctx,
+      builder: (_) {
+        return SimpleDialog(
+          title: Text('Name: ' + itemName),
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+              child: Text('Text 1:' + text1),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+              child: Text('Text 2:' + text2),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
+              child: Text('Text 3:' + text3),
+            ),
+            SimpleDialogOption(
+              child: const Text('Edit'),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditScreen(
+                              email: email,
+                              id: id,
+                            )));
+              },
+            ),
+            SimpleDialogOption(
+              child: const Text('Delete'),
+              onPressed: () {
+                deleteItem(id);
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  content: Text('Item Deleted Successfully!'),
+                ));
+                Navigator.pop(context);
+                _refreshlist();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,123 +105,132 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text('Task 3'),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                'Welcome, Name: ' + widget.name + ', Email: ' + widget.email,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Table(
-                  columnWidths: const {
-                    1: FlexColumnWidth(),
-                    2: FlexColumnWidth()
-                  },
-                  children: [
-                    const TableRow(children: [
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('name'),
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                // const SizedBox(
+                //   height: 20,
+                // ),
+                // Text(
+                //   'Welcome, Name: ' + widget.name + ', Email: ' + widget.email,
+                // ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text('Action'),
-                      )
-                    ]),
-                    for (var item in _items)
-                      TableRow(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(item['name']),
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.remove_red_eye),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => DetailScreen(
-                                              id: item['id'],
-                                            )));
-                              },
+                      color: Colors.grey[200],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: const [
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'ID',
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => DetailScreen(
-                                              id: item['id'],
-                                            )));
-                              },
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Name',
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => DetailScreen(
-                                              id: item['id'],
-                                            )));
-                              },
-                            ),
-                          ],
-                        ),
-                      ])
-                  ],
-                  border: TableBorder.all(width: 1, color: CustomColor.blue),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: RaisedButton(
-                  color: CustomColor.blue,
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddScreen(
-                                email: widget.email,
-                                username: widget.name,
-                              ))),
-                  child: const Text(
-                    'Add Item',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                child: RaisedButton(
-                  color: CustomColor.blue,
-                  onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SettingScreen(
-                                id: 1,
-                              ))),
-                  child: const Text(
-                    'Settings',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                for (var item in _items)
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              debugPrint(item['id'].toString());
+                              _show(context, item['id'], widget.name,
+                                  widget.email);
+                            },
+                            child: Text(
+                              item['id'].toString(),
+                              style: const TextStyle(
+                                  //fontSize: 16.0,
+                                  color: Colors.black),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              debugPrint(item['id'].toString());
+                              _show(context, item['id'], widget.name,
+                                  widget.email);
+                            },
+                            child: Text(
+                              item['name'],
+                              style: const TextStyle(
+                                  //fontSize: 16.0,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Divider(),
+                    ],
+                  ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: CustomColor.blue),
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddScreen(
+                                  email: widget.email,
+                                  username: widget.name,
+                                ))),
+                    child: const Text(
+                      'Add Item',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              )
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: CustomColor.blue),
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SettingScreen(
+                                  id: 1,
+                                ))),
+                    child: const Text(
+                      'Settings',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }

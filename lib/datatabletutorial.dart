@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:task3/color.dart';
 import 'package:task3/screen/addscreen.dart';
 import 'package:task3/screen/detailscreen.dart';
+import 'package:task3/screen/editscreen.dart';
 import 'package:task3/screen/settingscreen.dart';
 import 'package:task3/sql_helper.dart';
 
@@ -18,6 +19,10 @@ class DataTableTutorial extends StatefulWidget {
 class _DataTableTutorialState extends State<DataTableTutorial> {
   // All items
   List<Map<String, dynamic>> _items = [];
+
+  void deleteItem(int id) async {
+    await SQLHelper.deleteItem(id);
+  }
 
   void _refreshlist() async {
     final data = await SQLHelper.getAllItemsbyEmail(widget.email);
@@ -85,20 +90,15 @@ class _DataTableTutorialState extends State<DataTableTutorial> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => DetailScreen(
-                                              id: item['id'],
+                                        builder: (context) => EditScreen(
+                                              id: item['id'], email: 'z3ro647@gmail.com',
                                             )));
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => DetailScreen(
-                                              id: item['id'],
-                                            )));
+                                deleteItem(item['id']);
                               },
                             ),
                           ],
