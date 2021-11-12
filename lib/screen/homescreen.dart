@@ -99,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: CustomColor.blue,
@@ -127,25 +128,26 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       color: Colors.grey[200],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 40,
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: const [
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'ID',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                'ID',
+                                style: TextStyle(
+                                    fontSize: 18.0, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Name',
-                              style: TextStyle(
-                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                'Name',
+                                style: TextStyle(
+                                    fontSize: 18.0, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           )
                         ],
@@ -159,44 +161,48 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          TextButton(
-                            onPressed: () {
-                              debugPrint(item['id'].toString());
-                              // _show(context, item['id'], widget.name,
-                              //     widget.email);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailScreen(
-                                          email: widget.email,
-                                          id: item['id'],
-                                          name: widget.name)));
-                            },
-                            child: Text(
-                              item['id'].toString(),
-                              style: const TextStyle(
-                                  //fontSize: 16.0,
-                                  color: Colors.black),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                debugPrint(item['id'].toString());
+                                // _show(context, item['id'], widget.name,
+                                //     widget.email);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailScreen(
+                                            email: widget.email,
+                                            id: item['id'],
+                                            name: widget.name)));
+                              },
+                              child: Text(
+                                item['id'].toString(),
+                                style: const TextStyle(
+                                    //fontSize: 16.0,
+                                    color: Colors.black),
+                              ),
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              debugPrint(item['id'].toString());
-                              // _show(context, item['id'], widget.name,
-                              //     widget.email);
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DetailScreen(
-                                          email: widget.email,
-                                          id: item['id'],
-                                          name: widget.name)));
-                            },
-                            child: Text(
-                              item['name'],
-                              style: const TextStyle(
-                                  //fontSize: 16.0,
-                                  ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                debugPrint(item['id'].toString());
+                                // _show(context, item['id'], widget.name,
+                                //     widget.email);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => DetailScreen(
+                                            email: widget.email,
+                                            id: item['id'],
+                                            name: widget.name)));
+                              },
+                              child: Text(
+                                item['name'],
+                                style: const TextStyle(
+                                    //fontSize: 16.0,
+                                    ),
+                              ),
                             ),
                           ),
                         ],
