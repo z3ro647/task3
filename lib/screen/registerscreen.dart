@@ -50,6 +50,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => const LoginScreen()));
   }
+  
+  bool _isObscure1 = true;
+  bool _isObscure2 = true;
 
   @override
   Widget build(BuildContext context) {
@@ -98,21 +101,83 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CustomInputWidget(
-                      controller: passwordController,
-                      labeltext: 'Password',
-                      hinttext: 'Password',
-                      icon: Icons.lock_outline,
+                  // CustomInputWidget(
+                  //     controller: passwordController,
+                  //     labeltext: 'Password',
+                  //     hinttext: 'Password',
+                  //     icon: Icons.lock_outline,
+                  //   ),
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      } else if (value.length < 6 ) {
+                        return 'Password must be atleast 6 character';
+                      }
+                      return null;
+                    },
+                    controller: confirmPasswordController,
+                    obscureText: _isObscure1,
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      hintText: 'Passowrd',
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      suffixIcon: IconButton(
+                          icon: Icon(_isObscure1
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure1 = !_isObscure1;
+                            });
+                          }),
                     ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),
-                  CustomInputWidget(
-                      controller: confirmPasswordController,
-                      labeltext: 'Confirm Password',
-                      hinttext: 'Confirm Password',
-                      icon: Icons.lock_outline,  
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      } else if (value.length < 6 ) {
+                        return 'Confirm Password must be atleast 6 character';
+                      }
+                      return null;
+                    },
+                    controller: confirmPasswordController,
+                    obscureText: _isObscure2,
+                    decoration: InputDecoration(
+                      labelText: 'Confirm Password',
+                      hintText: 'Confirm Passowrd',
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      suffixIcon: IconButton(
+                          icon: Icon(_isObscure2
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure2 = !_isObscure2;
+                            });
+                          }),
                     ),
+                  ),
+                  // CustomInputWidget(
+                  //     controller: confirmPasswordController,
+                  //     labeltext: 'Confirm Password',
+                  //     hinttext: 'Confirm Password',
+                  //     icon: Icons.lock_outline,  
+                  //   ),
                 ],
               ),
             ),

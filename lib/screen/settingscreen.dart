@@ -15,7 +15,7 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController oldPasswordCOntroller = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
@@ -28,7 +28,7 @@ class _SettingScreenState extends State<SettingScreen> {
     if (newPassword.contains(confirmPassword)) {
       final data = await SQLHelper.readOldPassword(id);
       var op = data[0]['password'];
-      if(oldPassword.contains(op)) {
+      if (oldPassword.contains(op)) {
         await SQLHelper.updatePassword(id, confirmPassword);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Password Updated Successfully'),
@@ -44,6 +44,10 @@ class _SettingScreenState extends State<SettingScreen> {
       ));
     }
   }
+
+  bool _isObscure1 = true;
+  bool _isObscure2 = true;
+  bool _isObscure3 = true;
 
   @override
   Widget build(BuildContext context) {
@@ -75,17 +79,34 @@ class _SettingScreenState extends State<SettingScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
+                      } else if (value.length < 6) {
+                        return 'Old Password must be atleast 6 character';
                       }
                       return null;
                     },
-                    controller: oldPasswordCOntroller,
-                    decoration: const InputDecoration(
+                    controller: oldPasswordController,
+                    obscureText: _isObscure1,
+                    decoration: InputDecoration(
                       labelText: 'Old Password',
-                      hintText: 'Old Password',
+                      hintText: 'Old Passowrd',
+                      prefixIcon: const Icon(
+                        Icons.lock,
+                      ),
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey)),
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      suffixIcon: IconButton(
+                          icon: Icon(_isObscure1
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure1 = !_isObscure1;
+                            });
+                          }),
                     ),
                   ),
+                  //CustomInputField(controller: oldPasswordController, labeltext: 'Old Password', hinttext: 'Old Password'),
                   const SizedBox(
                     height: 20,
                   ),
@@ -93,17 +114,34 @@ class _SettingScreenState extends State<SettingScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
+                      } else if (value.length < 6 ) {
+                        return 'New Password must be atleast 6 character';
                       }
                       return null;
                     },
                     controller: newPasswordController,
-                    decoration: const InputDecoration(
+                    obscureText: _isObscure2,
+                    decoration: InputDecoration(
                       labelText: 'New Password',
-                      hintText: 'New Password',
+                      hintText: 'New Passowrd',
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                      ),
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey)),
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      suffixIcon: IconButton(
+                          icon: Icon(_isObscure2
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure2 = !_isObscure2;
+                            });
+                          }),
                     ),
                   ),
+                  //CustomInputField(controller: newPasswordController, labeltext: 'New Password', hinttext: 'New Password'),
                   const SizedBox(
                     height: 20,
                   ),
@@ -111,41 +149,64 @@ class _SettingScreenState extends State<SettingScreen> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter some text';
+                      } else if (value.length < 6 ) {
+                        return 'Confirm Password must be atleast 6 character';
                       }
                       return null;
                     },
                     controller: confirmPasswordController,
-                    decoration: const InputDecoration(
+                    obscureText: _isObscure3,
+                    decoration: InputDecoration(
                       labelText: 'Confirm Password',
-                      hintText: 'Confirm Password',
+                      hintText: 'Confirm Passowrd',
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                      ),
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey)),
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      suffixIcon: IconButton(
+                          icon: Icon(_isObscure3
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure3 = !_isObscure3;
+                            });
+                          }),
                     ),
                   ),
+                  //CustomInputField(controller: confirmPasswordController, labeltext: 'Confirm Password', hinttext: 'Confirm Password')
                 ],
               ),
             ),
           ),
           const SizedBox(
-            height: 20,
+            height: 40,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () {
-                setState(() {
-                  oldPassword = oldPasswordCOntroller.text;
-                  newPassword = newPasswordController.text;
-                  confirmPassword = confirmPasswordController.text;
-                });
-                changePassword(
-                    widget.id, oldPassword, newPassword, confirmPassword);
-              },
-              child: const Text(
-                'Submit',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: CustomColor.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onPressed: () {
+                  setState(() {
+                    oldPassword = oldPasswordController.text;
+                    newPassword = newPasswordController.text;
+                    confirmPassword = confirmPasswordController.text;
+                  });
+                  changePassword(
+                      widget.id, oldPassword, newPassword, confirmPassword);
+                },
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
               ),
             ),
           ),
@@ -154,18 +215,24 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const LoginScreen()));
-              },
-              child: const Text(
-                'Logout',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: CustomColor.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()));
+                },
+                child: const Text(
+                  'Logout',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
               ),
             ),
           ),
@@ -174,13 +241,19 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-              color: CustomColor.blue,
-              onPressed: () {},
-              child: const Text(
-                'Biometrics',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: CustomColor.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
+                onPressed: () {},
+                child: const Text(
+                  'Biometrics',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
               ),
             ),
           )
@@ -191,10 +264,45 @@ class _SettingScreenState extends State<SettingScreen> {
 }
 
 class CustomInputField extends StatelessWidget {
-  const CustomInputField({Key? key}) : super(key: key);
+  const CustomInputField(
+      {Key? key,
+      required this.controller,
+      required this.labeltext,
+      required this.hinttext})
+      : super(key: key);
+
+  final TextEditingController controller;
+  final String labeltext;
+  final String hinttext;
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return TextFormField(
+      validator: (value) {
+        if (labeltext == 'Old Password') {
+          if (value == null || value.isEmpty) {
+            return 'Please enter some text';
+          }
+          return null;
+        } else if (labeltext == 'New Password') {
+          if (value == null || value.isEmpty) {
+            return 'Please enter some text';
+          }
+          return null;
+        } else if (labeltext == 'Confirm Password') {
+          if (value == null || value.isEmpty) {
+            return 'Please enter some text';
+          }
+          return null;
+        }
+      },
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: labeltext,
+        hintText: hinttext,
+        border: const UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey)),
+      ),
+    );
   }
 }

@@ -210,44 +210,71 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Divider(),
                     ],
                   ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: CustomColor.blue),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => AddScreen(
-                                  email: widget.email,
-                                  username: widget.name,
-                                ))),
-                    child: const Text(
-                      'Add Item',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  child: SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: CustomColor.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        )
+                      ),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddScreen(
+                                    email: widget.email,
+                                    username: widget.name,
+                                  ))),
+                      child: const Text(
+                        'Add Item',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(primary: CustomColor.blue),
-                    onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SettingScreen(
-                                  id: 1,
-                                ))),
-                    child: const Text(
-                      'Settings',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                  child: SizedBox(
+                    height: 50,
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: CustomColor.blue,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)
+                        )
+                      ),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const SettingScreen(
+                                    id: 1,
+                                  ))),
+                      child: const Text(
+                        'Settings',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 20,
                 )
               ],
             ),

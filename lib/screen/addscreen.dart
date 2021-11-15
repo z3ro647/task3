@@ -109,25 +109,33 @@ class _AddScreenState extends State<AddScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: RaisedButton(
-                color: CustomColor.blue,
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      name = nameController.text;
-                      txt1 = text1Controller.text;
-                      txt2 = text2Controller.text;
-                      txt3 = text3Controller.text;
-                    });
-                    additem(
-                        widget.email, widget.username, name, txt1, txt2, txt3);
-                  }
-                },
-                child: const Text(
-                  'Submit',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                )),
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: CustomColor.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    )
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        name = nameController.text;
+                        txt1 = text1Controller.text;
+                        txt2 = text2Controller.text;
+                        txt3 = text3Controller.text;
+                      });
+                      additem(
+                          widget.email, widget.username, name, txt1, txt2, txt3);
+                    }
+                  },
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  )),
+            ),
           )
         ],
       ),
@@ -160,7 +168,7 @@ class CustomInputWidget extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labeltext,
         hintText: hinttext,
-        border: const OutlineInputBorder(
+        border: const UnderlineInputBorder(
             borderSide: BorderSide(color: Colors.grey)),
       ),
     );

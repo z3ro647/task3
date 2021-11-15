@@ -37,6 +37,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     }
   }
 
+  bool _isObscure = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,11 +83,42 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CustomInputWidget(
-                      controller: newPasswordController,
-                      labeltext: 'New Password',
-                      hinttext: 'New Password',
-                      icon: Icons.lock_outline)
+                  // CustomInputWidget(
+                  //     controller: newPasswordController,
+                  //     labeltext: 'New Password',
+                  //     hinttext: 'New Password',
+                  //     icon: Icons.lock_outline)
+                  TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter some text';
+                      } else if (value.length < 6) {
+                        return 'New Password must be atleast 6 character';
+                      }
+                      return null;
+                    },
+                    controller: newPasswordController,
+                    obscureText: _isObscure,
+                    decoration: InputDecoration(
+                      labelText: 'New Password',
+                      hintText: 'New Passowrd',
+                      prefixIcon: const Icon(
+                        Icons.lock_outline,
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey)),
+                      suffixIcon: IconButton(
+                          icon: Icon(_isObscure
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          }),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -109,12 +142,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             child: SizedBox(
               height: 50,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: CustomColor.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)
-                  )
-                ),
+                  style: ElevatedButton.styleFrom(
+                      primary: CustomColor.blue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10))),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       setState(() {
@@ -176,15 +207,15 @@ class CustomInputWidget extends StatelessWidget {
         if (value == null || value.isEmpty) {
           return 'Please enter some text';
         } else if (labeltext == 'Username') {
-          if(value.length < 5 ) {
+          if (value.length < 5) {
             return 'Username must be atleast 5 character';
           }
         } else if (labeltext == 'Email') {
-          if(!value.contains('@')) {
+          if (!value.contains('@')) {
             return 'Invalid Email address';
           }
         } else if (labeltext == 'New Password') {
-          if(value.length < 6) {
+          if (value.length < 6) {
             return 'New Password must be atleast 6 character';
           }
         }

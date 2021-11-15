@@ -52,9 +52,13 @@ class _EditScreenState extends State<EditScreen> {
     print(_item);
     setState(() {
       itemName = _item[0]['name'];
+      nameController.text = itemName;
       text1 = _item[0]['text1'];
+      text1Controller.text = text1;
       text2 = _item[0]['text2'];
+      text2Controller.text = text2;
       text3 = _item[0]['text3'];
+      text3Controller.text = text3;
     });
   }
 
@@ -122,13 +126,19 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ),
           const SizedBox(
-            height: 25,
+            height: 35,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: SizedBox(
               height: 48,
-              child: RaisedButton(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: CustomColor.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)
+                  )
+                ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     setState(() {
@@ -145,7 +155,6 @@ class _EditScreenState extends State<EditScreen> {
                   'Update',
                   style: TextStyle(color: Colors.white),
                 ),
-                color: CustomColor.blue,
               ),
             ),
           )
@@ -180,8 +189,15 @@ class CustomInputField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: labeltext,
         hintText: hinttext,
-        border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey)),
+        // border: const OutlineInputBorder(
+        //     borderSide: BorderSide(color: Colors.grey)
+        // ),
+        border: UnderlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Colors.grey
+          )
+        )
       ),
     );
   }
