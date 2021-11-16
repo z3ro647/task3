@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:task3/color.dart';
 import 'package:task3/screen/forgotpasswordscreen.dart';
 import 'package:task3/screen/homescreen.dart';
@@ -59,7 +60,29 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  Future<void> searchUserbyEmail(String emailText) async {
+      final data = await SQLHelper.getUserByEmail(emailText);
+      int i = data.length;
+      if (i == 1) {
+        debugPrint('Username: '+data[0]['username']);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(
+              name: data[0]['username'],
+              email: emailText
+            )
+          )
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Email Not Found'))
+        );
+      }
+  }
+
   bool _isObscure = true;
+  final LocalAuthentication localAuthentication = LocalAuthentication();
 
   @override
   Widget build(BuildContext context) {
@@ -182,6 +205,52 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Have an account?"),
+              Builder(
+                  builder: (context) => TextButton(
+                      onPressed: () async {
+                        String emailText =
+                            usernameOremailController.text;
+
+                        if (emailText.isEmpty) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content:
+                                Text('Please enter Email to use Biometric'),
+                          ));
+                        } else {
+                          bool weCanCheckBiometrics =
+                              await localAuthentication.canCheckBiometrics;
+
+                          if (weCanCheckBiometrics) {
+                            bool authenticated =
+                                await localAuthentication.authenticate(
+                                    biometricOnly: true,
+                                    localizedReason:
+                                        "Please use finger print to login");
+                            debugPrint('$authenticated');
+                            if (authenticated) {
+                              debugPrint('Authenticated');
+                              searchUserbyEmail(emailText);
+                            } else {
+                              debugPrint('Not Authenticated');
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('Biometric not found'),
+                              ));
+                            }
+                          }
+                        }
+                      },
+                      child: const Text(
+                        'Use Biometric',
+                        style: TextStyle(color: CustomColor.blue),
+                      ))),
+            ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
